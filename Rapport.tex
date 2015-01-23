@@ -1,0 +1,171 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[frenchb]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{MADMC} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Mini-Projet \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Pedro M. V. de Carvalho} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\section{Introduction}
+
+Le probl\`eme c'est de minimiser une fonction $f_I(\cdot)$ d'une liste de $k$ objets choisis parmis $n$, chacun avec un co\^ut bidimensionel $(c^i_1, c^i_2)$. La fonction \`a minimiser est :
+\begin{align} 
+f_I(y) = \max\{\alpha y_1 + (1-\alpha)y_2:\alpha\in[\alpha_{min},\alpha_{max}]\}				
+\end{align}
+
+o\`u $y = (\sum_{i=1}^nc^i_1x_i, \sum_{i=1}^nc^i_2x_i)$, $x=(x_1, ..., x_n)$ est le vecteur binaire avec $x_i = 1$ si l'objet $i$ est choisi et $0$ sinon, $\alpha_{min}<\alpha_{max}$, $\alpha_{min}<1$ et $0<\alpha_{max}$.
+
+Pour faire ce projet, j'ai utilis\'e le langage de programmation Python. J'ai utilis\'e des listes et des fonctions disponibles dans la librairie Numpy.
+
+\section{R\'esultats pr\'eliminaires}
+
+\subsection{Question 1}
+Tout d'abord, il faut trouver trois vecteurs $y$, $y'$ et $y''$ avec les propriet\'es 
+
+\begin{align}
+f_I(y) < f_I(y')\text{ et }f_I(y'+y'')<f_I(y+y'')
+\end{align}
+
+ pour montrer que le principe d'optimalit\'e n'est pas v\'erifi\'e. Prenons $\alpha_{min} = 0.1$, $\alpha_{max} = 1000$, $y = (1, 4)$, $y' = (1, 6)$ et $y'' = (5, 1)$. Nous avons $f_I(y) = 3.7 < 5.5 = f_I(y')$ et $f_I(y'+y'') = 6.9 < 1005 = f_I(y + y'')$. Q.E.D.
+
+\subsection{Questions 2, 3 et 4}
+Ces questions ont \'et\'e r\'epondues par les fonctions "vecs", "naive", et "lexialgo" dans le fichier part2.py.
+
+\subsection{Question 5}
+L'algorithme na\"if a complexit\'e $O(n^2)$ pour les comparaisons syst\'ematiques. Le tri lexicographique a complexit\'e $O(n\log n)$ (qui est la complexit\'e du quicksort) et le parcours a complexit\'e $O(n)$, et donc l'algorithme de la question 4 a complexit\'e $O(n\log n + n) = O(n\log n)$. L'ex\'ecution du programme part2.py montre les r\'esultats d'ex\'ecution, et le fichier part2.png montre des courbes g\'en\'er\'es par Excel par les donn\'ees dans part2.txt.
+
+\section{Une premi\`ere proc\'edure de r\'esolution}
+\subsection{Question 6}
+Pour montrer que le point minimax est forcement dans l'ensemble non-domin\'e, il suffit de montrer que, pour tout point domin\'e, il y a toujours un point qui le domine et qui est mieux.
+
+Soit $y = (y_1,y_2)$ un point domin\'e. Pour toute intervalle $I$, il existe un point $y' = (y'_1, y'_2) \neq y$ qui domine $y$ et avec la propriet\'e $f_I(y') < f_I(y)$. Si $y'$ domine $y$, $y'_1 \leq y_1$ et $y'_2 \leq y_2$. Alors $f_I(y) = (y_1-y_2)\alpha + y_2$ et $f_I(y') = (y'_1-y'_2)\alpha'+y'_2$ pour certains $\alpha, \alpha'\in [\alpha_{min},\alpha_{max}]$. Comme on va d\'emontrer \`a la question 8, si $y_1>y_2$ alors $\alpha = \alpha_{max}$, et $\alpha=\alpha_{min}$ sinon. Choisissons $y'$ de fa\c con que $y_1-y_2 = y'_1-y'_2$, d'o\`u $\alpha = \alpha'$. Dans ce cas l\`a :
+
+\begin{align}
+\begin{split}
+y'_2 &< y_2 \\
+y'_2 + (y_1-y_2)\alpha &< y_2 + (y_1-y_2)\alpha\\
+y'_2 + (y_1-y_2)\alpha' &< y_2 + (y_1-y_2)\alpha\\
+y'_2 + (y'_1-y'_2)\alpha &< y_2 + (y_1-y_2)\alpha\\
+f_I(y') &< f_I(y)
+\end{split}
+\end{align}
+
+Alors, quelque soit $y$ non-domin\'e, et pour tout intervalle $I$, il y a toujours un vecteur $y'$ qui domine $y$ et qui est pr\'efer\'e \`a $y$. Q.E.D.
+
+\subsection{Queston 7}
+Soit $P(i, j)$ le sous-probl\`eme restreint \`a la s\'election de $j$ objets dans $\{1, ..., i\}$. On a :
+
+\begin{align}
+P(i, j) = \begin{cases} \{(0,0)\}&\mbox{si } j = 0 \\ \emptyset &\mbox{si }  j > i  \\ y(i) &\mbox{si } i = j = 1 \\ OPT(P(i-1, j-1) + y(i) \cup P(i-1, j)) &\mbox{sinon}\end{cases}
+\end{align}
+
+o\`u $y(i)$ est le co\^ut de l'objet $i$ tout seul. Il faut donc calculer $P(n, k)$, soit de fa\c con r\'ecursive, soit s\'equentielle. Pour eviter des stack-overflows, on va l'impl\'ementer s\'equentiellement. La complexit\'e de cet algorithme est $O(knM)$ o\`u $M$ est une borne sup\'erieure sur la valeur d'un objectif. Cet algorithme est impl\'ement\'e par la fonction "P" dans le fichier part3.py.
+
+\subsection{Question 8}
+On peut r\'earranger les \'elements de $f_I(y)$ :
+
+\begin{align}
+f_I(y) = \max\{ (y_1 - y_2)\alpha + y_2:\alpha\in[\alpha_{min},\alpha_{max}]\}	
+\end{align}
+
+Le terme \`a \^etre maximis\'e est lin\'eaire en $\alpha$, et il est strictement croissant ssi $y_1 > y_2$ et strictement d\'ecroissant ssi $y_1 < y_2$, d'o\`u on peut conclure que le terme ne peut \^etre maximis\'e que pour les bornes de l'intervalle $I$, c'est-\`a-dire pour $\alpha = \alpha_{min}$ ou $\alpha=\alpha_{max}$. Il est donc facile \`a impl\'ementer une fonction avec compl\'exit\'e $O(n)$ qui trouve le vecteur qui minimise $f_I(y)$ pour un intervalle $I$ donn\'e parmi $n$ vecteurs. Cet algorithme est implement\'e par les fonctions "f" et "q8" dans le fichier part3.py.
+
+\subsection{Question 9}
+Il suffit d'ex\'ecuter le fichier part3.py pour voir les r\'esultats.
+
+\section{Une seconde proc\'edure de r\'esolution}
+\subsection{Question 10}
+La r\`egle de $I$-dominance est :
+
+\begin{align}
+y\ I\text{-domine }y'\text{ si } \begin{cases} \forall\alpha\in I, \alpha y_1 + (1-\alpha)y_2 \leq \alpha y'_1 + (1-\alpha)y'_2 \\
+\exists\alpha\in I, \alpha y_1 + (1-\alpha)y_2 < \alpha y'_1 + (1-\alpha)y'_2 \end{cases}
+\end{align}
+
+Si $NI$ est l'ensemble des points non $I$-domin\'es et $ND$ est l'ensemble des points non-domin\'es au sens de Pareto, pour montrer que $NI\subseteq ND$ il suffit de montrer que $y\in NI\rightarrow y\in ND$. On raisonne par absurde : Supposons que $y$ n'est pas non-domin\'e. Donc il existe un point $y' \neq y$ tel que $y'_1 \leq y_1$ et $y'_2 \leq y_2$. Mais si c'est le cas, il est forcement vrai que $\forall\alpha > 0, \alpha y'_1 \leq \alpha y_1$ et $\forall \alpha < 1, (1-\alpha)y'_2\leq(1-\alpha)y_2$, et au moins une de ces in\'egalit\'es est stricte car $y \neq y'$. Comme $\alpha_{min} <1$ et $\alpha_{max}>0$, on a $\exists\alpha, (\alpha\in I)\land (0 < \alpha < 1) \land (\alpha y'_1 + (1-\alpha)y'_2 < \alpha y_1 + (1-\alpha)y_2)$, et donc $y$ n'est pas non $I$-domin\'e. Q.E.D.
+
+Il faut maintenant donc montrer qu'un point minimax est inclus dans $NI$. Si $y$ est minimax, alors $\max\{\alpha y_1 + (1-\alpha)y_2:\alpha\in I\}$ est minimal. Mais s'il existe un point $y'$ qui $I$-domine $y$, alors $\forall \alpha>0, \alpha y'_1 \leq \alpha y_1$ et $\forall \alpha < 1, (1-\alpha)y'_2 \leq (1-\alpha)y_2$, et pour que $y$ soit minimax il faut qu'il existe un tel $\alpha' \in I$ que $ \alpha' y'_1 + (1-\alpha')y'_2 >  \alpha y_1 + (1-\alpha)y_2$. Mais si c'est le cas, alors $ \alpha' y_1 + (1-\alpha')y_2 >  \alpha y_1 + (1-\alpha)y_2$, et $\alpha$ n'est pas l'\'el\'ement qui maximise $ \alpha y_1 + (1-\alpha)y_2$, contradiction. Donc il n'existe pas $y'$ qui $I$-domine $y$ si $y$ est un point minimax. Q.E.D.
+
+\subsection{Question 11}
+
+Il faut montrer que la r\`egle de $I$-dominance est \'equivalente \`a la r\`egle de $I'$-dominance :
+
+\begin{align}
+y\ I'\text{-domine }y'\text{ si } \begin{cases} \forall\alpha\in \{\alpha_{min}, \alpha_{max}\}, \alpha y_1 + (1-\alpha)y_2 \leq \alpha y'_1 + (1-\alpha)y'_2 \\
+\exists\alpha\in \{\alpha_{min}, \alpha_{max}\}, \alpha y_1 + (1-\alpha)y_2 < \alpha y'_1 + (1-\alpha)y'_2 \end{cases}
+\end{align}
+
+Soit $I(y,y')\leftrightarrow y\ I$-domine $y'$ , $I'(y,y')\leftrightarrow y\ I'$-domine $y'$ et $f_{\alpha}(y) = \alpha y_1 + (1-\alpha)y_2$. Ce qu'il faut montrer donc est $I(y,y') \leftrightarrow I'(y,y')$. Supposons sans perte de g\'en\'eralit\'e que $y_1>y_2$. Alors, comme \`a la question 8, on peut r\'earranger les termes : $f(\alpha,y) = (y_1-y_2)\alpha  + y_2$, et on voit que $f(\alpha,y)$ est une fonction strictement croissante en $\alpha$.
+
+On montre premi\`erement que $I(y,y')\rightarrow I'(y,y')$. C'est claire que $\forall\alpha\in I, f(\alpha,y) \leq f(\alpha,y')\rightarrow \forall\alpha\in \{\alpha_{min}, \alpha_{max}\}, f(\alpha,y) \leq f(\alpha,y')$. Alors,$f(\alpha,y)$ est une droite en $\alpha$ pour $y$ fix\'e. Cela veut dire que, si $I(y,y')$, il y a au plus un point $\alpha'$ ou $f(\alpha',y) = f(\alpha',y')$ o\`u les droites se croisent, et ce point doit \^etre soit $\alpha_{min}$, soit $\alpha_{max}$ (sinon il est impossible que $\forall\alpha\in I, f(\alpha,y)\leq f(\alpha,y')$, car l'in\'egalit\'e est invers\'e sur le point $\alpha'$) ; tous les autres points $\alpha$ dans $I$ doivent avoir $f(\alpha,y)<f(\alpha,y')$, et particuli\`erement l'un des points $\alpha_{min}$ ou $\alpha_{max}$. On peut conclure que $\exists\alpha\in I, f(\alpha,y) < f(\alpha,y')\rightarrow\exists\alpha\in \{\alpha_{min}, \alpha_{max}\}, f(\alpha,y)<f(\alpha,y')$. Alors $I(y,y')\rightarrow I'(y,y')$.
+
+Montrons maintenant que $I'(y,y')\rightarrow I(y,y')$. C'est aussi imm\'ediate que $\exists\alpha\in \{\alpha_{min}, \alpha_{max}\}, f(\alpha,y) < f(\alpha,y')\rightarrow\exists\alpha\in I, f(\alpha,y)<f(\alpha,y')$. Et, \`a cause de la lin\'earit\'e et croissance stricte en $\alpha$, $\forall\alpha\in \{\alpha_{min}, \alpha_{max}\}, f(\alpha,y) \leq f(\alpha,y')\rightarrow\exists\alpha\in I, f(\alpha,y)\leq f(\alpha,y')$. On a donc prouv\'e que $I(y,y')\leftrightarrow I'(y,y')$ pour le cas o\`u $y_1>y_2$. Le cas invers est similaire, et donc on a prouv\'e que les deux dominances sont \'equivalentes pour tous les cas. Q.E.D.
+
+Alors nous devons maintenant transformer une instance $\Pi$ du probl\`eme de d\'etermination des points non $I$-domin\'es en une instance $\Pi'$ du probl\`eme de d\'etermination des points non-domin\'es (au sens de Pareto). On peut comparer $\alpha y_1$ avec $\alpha y'_1$ et $(1-\alpha)y_2$ avec $(1-\alpha)y'_2$ pour $\alpha\in\{\alpha_{min},\alpha_{max}\}$. Une modification dans la fonction "lexialgo" dans le fichier part4.py montre cette transformation.
+
+\subsection{Question 12}
+L'ex\'ecution du programme part4.py montre les r\'esultats d'ex\'ecution, et le fichier part4.png montre des courbes g\'en\'er\'es par Excel par les donn\'ees dans part4.txt.
+
+\end{document}
