@@ -30,7 +30,8 @@ def lexialgo(y):
     return toreturn
 
 def P(y, k):
-    #To avoid stack overflows, instead of doing this recursively, well do this linearly
+    #To avoid stack overflows, instead of doing this recursively, well do this
+    #linearly
     #(since we need to calculate all elements of the pareto-optimal array anyway)
     to_add = []
     n = len(y)
@@ -47,18 +48,23 @@ def P(y, k):
                 #we just add the empty set to that instance of the problem
                 to_add += [[]]
             else:
-                #Otherwise, we use the recurrence relation. We start with P(i-1, j-1)
+                #Otherwise, we use the recurrence relation. We start with
+                #P(i-1, j-1)
                 new_p = []
                 for l in range(len(p_mat[j-1][i-1])):
-                    #(This part only serves to keep track of which objects we've added so far)
+                    #(This part only serves to keep track of which objects we've
+                    #added so far)
                     elements = p_mat[j-1][i-1][l][2 : len(p_mat[j-1][i-1][l])]
-                    #Each element of the pareto-optimal set is a tuple whose two first components are
-                    #the cost of that element, and the others are the objects that make that element up
+                    #Each element of the pareto-optimal set is a tuple whose two
+                    #first components are
+                    #the cost of that element, and the others are the objects
+                    #that make that element up
                     new_p += [[p_mat[j-1][i-1][l][0] + y[i][0], p_mat[j-1][i-1][l][1] + y[i][1], i] + elements]
                 if i > 0:
                     #Here we add P(i-1, j)
                     new_p += to_add[i-1]
-                #And here we find the pareto-optimal elements of the above-defined set
+                #And here we find the pareto-optimal elements of the
+                #above-defined set
                 to_add += [lexialgo(new_p)]
         #Finally, we add that line to the pareto-optimal matrix
         p_mat += [to_add]
@@ -78,7 +84,8 @@ def f(y, alpha):
     return a * y[0] + (1 - a) * y[1]
 
 def q8(y, alpha):
-    #Given a bunch of vectors y and an interval alpha, this finds the minimax point
+    #Given a bunch of vectors y and an interval alpha, this finds
+    #the minimax point
     current_best = 0
     current_f = f(y[0], alpha)
     for i in range(1, len(y)):

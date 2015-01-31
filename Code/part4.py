@@ -36,9 +36,6 @@ def lexialgo_I(y, alpha):
     #Since y[0] is the lexicographic minimum, it certainly is
     #one of the I-optimal points
     #Unless, that is, alpha_min < 0, in which case we have to invert this order
-    #This operaton is O(n)
-    if alpha[0] < 0:
-        y.reverse()
     current_y = y[0]
     toreturn = [current_y]
     one_alpha_min = 1 - alpha[0]
@@ -48,9 +45,21 @@ def lexialgo_I(y, alpha):
         #For each other element, I compare that element to the current y
         #Since they're ordered lexicographically, they're in a growing order of their first elements
         #Therefore, I just compare their second elements
-        if (one_alpha_min * current_y[1]) > (one_alpha_min * next_y[1]) or (one_alpha_max * current_y[1]) > (one_alpha_max * next_y[1]):
+        if (one_alpha_max * current_y[1]) > (one_alpha_max * next_y[1]):
             toreturn = [next_y] + toreturn
             current_y = next_y
+    
+    #This operaton is O(n)
+    if alpha[0] < 0:
+        y.reverse()
+        toreturn = [y[0]] + toreturn
+    current_y = y[0]
+    for i in range(1, len(y)):
+        next_y = y[i]
+        if (one_alpha_min * current_y[1]) > (one_alpha_min * next_y[1]):
+            toreturn = [next_y] + toreturn
+            current_y = next_y
+    
     return toreturn
 
 def P(y, k):

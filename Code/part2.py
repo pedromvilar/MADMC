@@ -34,13 +34,15 @@ def lexialgo(y):
     #first this sorts lexicographically 
     y.sort()
     #Now we're going to find the Pareto-optimal elements of y
-    #Since y[0] is the lexicographic minimum, it certainly is one of the Pareto-optimal points
+    #Since y[0] is the lexicographic minimum, it certainly is one of the Pareto-
+    #optimal points
     current_y = y[0]
     toreturn = [current_y]
     for i in range(1, len(y)):
         next_y = y[i]
         #For each other element, I compare that element to the current y
-        #Since they're ordered lexicographically, they're in a growing order of their first elements
+        #Since they're ordered lexicographically, they're in a growing order of
+        #their first elements
         #Therefore, I just compare their second elements
         if current_y[1] > next_y[1]:
             toreturn = [next_y] + toreturn
